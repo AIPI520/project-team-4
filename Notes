@@ -1,0 +1,7 @@
+"10 metre wind speed_m s**-1 (max)": This part indicates that the measurement is related to the maximum wind speed at a height of 10 meters above the ground or sea surface, and the unit of measurement is meters per second (m/s).
+
+"lambert_level 10": The term "lambert_level" may refer to a specific wind measurement level or parameterization. In atmospheric sciences and meteorology, different models and techniques are used to represent and measure wind speeds at various levels in the atmosphere. "Level 10" suggests that this measurement pertains to a specific layer or level in the atmosphere.
+
+"m_cogt_X": The term "cogt" typically refers to "center of gravity time." It may indicate a specific time or interval within a data set. The number after "cogt_" (e.g., 5, 9, 13, 18) likely corresponds to a specific time or interval for which the wind speed measurement is taken.
+
+So, these labels seem to represent wind speed measurements at a height of 10 meters above the surface at different times or intervals, likely related to a specific atmospheric level or parameterization (lambert_level) and taken at different "center of gravity times" (cogt). The specific context and data source would be needed to interpret these labels more accurately.
