@@ -5,6 +5,9 @@ import pandas as pd
 from pathlib import Path
 from sklearn.preprocessing import OrdinalEncoder
 
+import warnings
+warnings.filterwarnings('ignore')
+
 class DataLoader:
 
     """
@@ -42,21 +45,21 @@ class DataLoader:
         enconder.fit(df[non_numerical_columns])
         df[non_numerical_columns] = enconder.transform(df[non_numerical_columns])
 
-        df = DataLoader._convert_date_columns(df)
+        # df = DataLoader._convert_date_columns(df)
 
         df.drop(columns = ['point_ewkt'], inplace = True)
 
         return df
 
-    @staticmethod
-    def _convert_date_columns(df):
-        datetime_features = list(df.select_dtypes(include = "datetime64[ns, UTC]").columns)
-        for i in datetime_features:
-            df[i+"_year"] = df[i].dt.year
-            df[i+"_month"] = df[i].dt.month
-            df[i+"_day"] = df[i].dt.day
-            df[i+"_hour"] = df[i].dt.hour
+    # @staticmethod
+    # def _convert_date_columns(df):
+    #     datetime_features = list(df.select_dtypes(include = "datetime64[ns, UTC]").columns)
+    #     for i in datetime_features:
+    #         df[i+"_year"] = df[i].dt.year
+    #         df[i+"_month"] = df[i].dt.month
+    #         df[i+"_day"] = df[i].dt.day
+    #         df[i+"_hour"] = df[i].dt.hour
             
-        df.drop(columns = datetime_features, inplace = True)
+    #     df.drop(columns = datetime_features, inplace = True)
 
-        return df
+    #     return df

@@ -2,6 +2,9 @@ import pandas as pd
 import math
 from difflib import SequenceMatcher
 
+import warnings
+warnings.filterwarnings('ignore')
+
 class FeatureBuilder:
 
     """
@@ -21,18 +24,30 @@ class FeatureBuilder:
     """
     @staticmethod
     def filter_best_features(df):
-        groups = FeatureBuilder._group_features(df.columns.unique().tolist())
+        train_df_total = df.loc[df['SimStartDate'] < '2018-11-01']
+        test_df_total = df.loc[df['SimStartDate'] >= '2018-11-01']
 
+        X_train_SimStartDate = train_df_total['SimStartDate']
+        X_test_SimStartDate = test_df_total['SimStartDate']
+
+        train_df_total = FeatureBuilder._convert_date_columns(train_df_total)
+        test_df_total = FeatureBuilder._convert_date_columns(test_df_total)
+        df = FeatureBuilder._convert_date_columns(df)
+
+        groups = FeatureBuilder._group_features(df.columns.unique().tolist())
         selected_features = [FeatureBuilder._get_best_feature_from_group(group, df) for group in groups]
 
+        train_df = train_df_total[selected_features]
+        test_df = test_df_total[selected_features]
+
         # Use all data after Nov 1, 2018 (15 storms) as test set
-        test_df = df[selected_features].loc[(df['SimStartDate_year'] > 2018) | 
-                                             ((df['SimStartDate_year'] == 2018) & (df['SimStartDate_month'] > 11)) |
-                                             ((df['SimStartDate_year'] == 2018) & (df['SimStartDate_month'] == 11) & (df['SimStartDate_day'] >= 1))]
+        # test_df = df[selected_features].loc[(df['SimStartDate_year'] > 2018) | 
+        #                                      ((df['SimStartDate_year'] == 2018) & (df['SimStartDate_month'] > 11)) |
+        #                                      ((df['SimStartDate_year'] == 2018) & (df['SimStartDate_month'] == 11) & (df['SimStartDate_day'] >= 1))]
        
-        train_df = df[selected_features].loc[(df['SimStartDate_year'] < 2018) | 
-                                              ((df['SimStartDate_year'] == 2018) & (df['SimStartDate_month'] < 11)) |
-                                              ((df['SimStartDate_year'] == 2018) & (df['SimStartDate_month'] == 11) & (df['SimStartDate_day'] < 1))]
+        # train_df = df[selected_features].loc[(df['SimStartDate_year'] < 2018) | 
+        #                                       ((df['SimStartDate_year'] == 2018) & (df['SimStartDate_month'] < 11)) |
+        #                                       ((df['SimStartDate_year'] == 2018) & (df['SimStartDate_month'] == 11) & (df['SimStartDate_day'] < 1))]        
 
         X_train = train_df.drop(['outage_count'], axis=1)
         y_train = train_df['outage_count']
@@ -40,7 +55,7 @@ class FeatureBuilder:
         X_test = test_df.drop(['outage_count'], axis=1)
         y_test = test_df['outage_count']
 
-        return X_train, X_test, y_train, y_test, selected_features
+        return X_train, X_test, y_train, y_test, selected_features, X_train_SimStartDate, X_test_SimStartDate
 
 
     """
@@ -96,3 +111,16 @@ class FeatureBuilder:
         else:
             print('Selected feature: ', group[0])
             return group[0]
+        
+    @staticmethod
+    def _convert_date_columns(df):
+        datetime_features = list(df.select_dtypes(include = "datetime64[ns, UTC]").columns)
+        for i in datetime_features:
+            df[i+"_year"] = df[i].dt.year
+            df[i+"_month"] = df[i].dt.month
+            df[i+"_day"] = df[i].dt.day
+            df[i+"_hour"] = df[i].dt.hour
+            
+        df.drop(columns = datetime_features, inplace = True)
+
+        return df
