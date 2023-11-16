@@ -1,18 +1,98 @@
 import pandas as pd
-
-def generate_features(df):
-    selected_feats = ['event_type', 'breaker_counts', 'fuse_counts', 'switch_counts', 'transformer_counts', 'recloser_counts', 'pole_counts', 'poly_ewkt', 'GUST_FORCE N-filtered_32-max_sum', 'GUST_FORCE N-filtered_32-max_mean', 'GUST_FORCE N-filtered_32-max_min', 'HOURLY_WET_SNOW_ACCUM_RATE m/h-filtered_32-max_max', 'HOURLY_SNOW_DEPTH_WATER_EQUIV_ACCUM_RATE m-2/h-filtered_32-max_max', 'GUST_FORCE N-filtered_24-max_sum', 'GUST_FORCE N-filtered_24-max_mean', 'Wind speed (gust)_m s**-1 (max)_lambert_level 10 m-filtered_32-max_sum', 'Wind speed (gust)_m s**-1 (max)_lambert_level 10 m-filtered_32-max_mean', '(Wind speed (gust)_m s**-1 (max)_lambert_level 10 m-filtered_32-max-0)^1', '(Wind speed (gust)_m s**-1 (max)_lambert_level 10 m-filtered_32-max-0)^2', '(Wind speed (gust)_m s**-1 (max)_lambert_level 10 m-filtered_32-max-5)^1', '(Wind speed (gust)_m s**-1 (max)_lambert_level 10 m-filtered_32-max-5)^2', '(Wind speed (gust)_m s**-1 (max)_lambert_level 10 m-filtered_32-max-10)^1', '(Wind speed (gust)_m s**-1 (max)_lambert_level 10 m-filtered_32-max-10)^2', '(Wind speed (gust)_m s**-1 (max)_lambert_level 10 m-filtered_32-max-15)^1', '(Wind speed (gust)_m s**-1 (max)_lambert_level 10 m-filtered_32-max-15)^2', '(Wind speed (gust)_m s**-1 (max)_lambert_level 10 m-filtered_32-max-20)^1', '(Wind speed (gust)_m s**-1 (max)_lambert_level 10 m-filtered_32-max-20)^2', '(10 metre wind speed_m s**-1 (max)_lambert_level 10 m-filtered_32-max-10)^2', '(10 metre wind speed_m s**-1 (max)_lambert_level 10 m-filtered_32-max-15)^1', '(10 metre wind speed_m s**-1 (max)_lambert_level 10 m-filtered_32-min-5)^2', '(Wind speed (gust)_m s**-1 (max)_lambert_level 10 m-filtered_16-max-0)^2', '(Wind speed (gust)_m s**-1 (max)_lambert_level 10 m-filtered_16-max-5)^2', '(Wind speed (gust)_m s**-1 (max)_lambert_level 10 m-filtered_16-max-10)^2', '(Wind speed (gust)_m s**-1 (max)_lambert_level 10 m-filtered_16-max-15)^1', '(Wind speed (gust)_m s**-1 (max)_lambert_level 10 m-filtered_16-max-15)^2', '(Wind speed (gust)_m s**-1 (max)_lambert_level 10 m-filtered_16-max-20)^1', '(Wind speed (gust)_m s**-1 (max)_lambert_level 10 m-filtered_16-max-20)^2', '(Wind speed (gust)_m s**-1 (max)_lambert_level 10 m-filtered_32-mean-10)^2', '(Wind speed (gust)_m s**-1 (max)_lambert_level 10 m-filtered_32-mean-15)^1', '(Wind speed (gust)_m s**-1 (max)_lambert_level 10 m-filtered_32-mean-15)^2', '(Wind speed (gust)_m s**-1 (max)_lambert_level 10 m-filtered_32-mean-20)^1', '(Wind speed (gust)_m s**-1 (max)_lambert_level 10 m-filtered_32-mean-20)^2', '(Wind speed (gust)_m s**-1 (max)_lambert_level 10 m-filtered_24-max-0)^2', '(Wind speed (gust)_m s**-1 (max)_lambert_level 10 m-filtered_24-max-5)^2', '(Wind speed (gust)_m s**-1 (max)_lambert_level 10 m-filtered_24-max-10)^1', '(Wind speed (gust)_m s**-1 (max)_lambert_level 10 m-filtered_24-max-10)^2', '(Wind speed (gust)_m s**-1 (max)_lambert_level 10 m-filtered_24-max-15)^1', '(Wind speed (gust)_m s**-1 (max)_lambert_level 10 m-filtered_24-max-15)^2', '(Wind speed (gust)_m s**-1 (max)_lambert_level 10 m-filtered_24-max-20)^1', '(Wind speed (gust)_m s**-1 (max)_lambert_level 10 m-filtered_24-max-20)^2', '(Wind speed (gust)_m s**-1 (max)_lambert_level 10 m-filtered_16-mean-15)^2', '(Wind speed (gust)_m s**-1 (max)_lambert_level 10 m-filtered_16-mean-20)^1', '(Wind speed (gust)_m s**-1 (max)_lambert_level 10 m-filtered_16-mean-20)^2', '(Wind speed (gust)_m s**-1 (max)_lambert_level 10 m-filtered_24-mean-10)^2', '(Wind speed (gust)_m s**-1 (max)_lambert_level 10 m-filtered_24-mean-15)^1', '(Wind speed (gust)_m s**-1 (max)_lambert_level 10 m-filtered_24-mean-15)^2', '(Wind speed (gust)_m s**-1 (max)_lambert_level 10 m-filtered_24-mean-20)^1', '(Wind speed (gust)_m s**-1 (max)_lambert_level 10 m-filtered_24-mean-20)^2', 'LU_23_30', 'LU_23_60', 'canopy_interval_11_20_60', 'length_proxy_30', 'line_length_30', 'length_proxy_60', 'line_length_60']
-
-
-    # Use all data after Nov 1, 2018 (15 storms) as test set
-    test_df = df.loc[df['SimStartDate'] >= '2018-11-01']
-    train_df = df.loc[df['SimStartDate'] < '2018-11-01']
-
-    X = train_df.drop(['outage_count'], axis=1)
-    y = train_df['outage_count']
-
-    return X, y, selected_feats
+import math
+from difflib import SequenceMatcher
 
 class FeatureBuilder:
-    def filter_best_features(self):
-        pass
+
+    """
+    This function filters the best features from the dataframe.
+    It groups similar features together and selects the best feature from each group.
+    The best feature is the one that has the highest correlation with the target variable.
+    
+    Parameters:
+    df (DataFrame): The input dataframe
+    
+    Returns:
+    X_train (DataFrame): The training data
+    X_test (DataFrame): The test data
+    y_train (Series): The target variable for the training data
+    y_test (Series): The target variable for the test data
+    selected_feats (list): The list of selected features
+    """
+    @staticmethod
+    def filter_best_features(df):
+        groups = FeatureBuilder._group_features(df.columns.unique().tolist())
+
+        selected_features = [FeatureBuilder._get_best_feature_from_group(group, df) for group in groups]
+
+        # Use all data after Nov 1, 2018 (15 storms) as test set
+        test_df = df[selected_features].loc[(df['SimStartDate_year'] > 2018) | 
+                                             ((df['SimStartDate_year'] == 2018) & (df['SimStartDate_month'] > 11)) |
+                                             ((df['SimStartDate_year'] == 2018) & (df['SimStartDate_month'] == 11) & (df['SimStartDate_day'] >= 1))]
+       
+        train_df = df[selected_features].loc[(df['SimStartDate_year'] < 2018) | 
+                                              ((df['SimStartDate_year'] == 2018) & (df['SimStartDate_month'] < 11)) |
+                                              ((df['SimStartDate_year'] == 2018) & (df['SimStartDate_month'] == 11) & (df['SimStartDate_day'] < 1))]
+
+        X_train = train_df.drop(['outage_count'], axis=1)
+        y_train = train_df['outage_count']
+
+        X_test = test_df.drop(['outage_count'], axis=1)
+        y_test = test_df['outage_count']
+
+        return X_train, X_test, y_train, y_test, selected_features
+
+
+    """
+    This function groups similar features together.
+    Similarity is calculated as a % using the SequenceMatcher from difflib.
+    """
+    @staticmethod
+    def _group_features(features, similarity_threshold=80):
+        groups = []
+        used_indices = set()
+
+        for i, f1 in enumerate(features):
+            if i in used_indices:
+                continue
+
+            # This will be a new group
+            current_group = [f1]
+            used_indices.add(i)
+
+            for j, f2 in enumerate(features):
+                if j in used_indices or i == j:
+                    continue
+
+                # Calculate similarity
+                similarity = SequenceMatcher(None, f1, f2).ratio() * 100
+                if similarity > similarity_threshold:
+                    current_group.append(f2)
+                    used_indices.add(j)
+            
+            groups.append(current_group)
+
+        return groups
+
+    """
+    This function selects the best feature from a group using the correlation with the target variable.
+    """
+    @staticmethod
+    def _get_best_feature_from_group(group, df):
+        if len(group) > 1:
+            highest_corr = -math.inf
+            for feat in group:
+                corr = abs(df['outage_count'].corr(df[feat]))
+                if(math.isnan(corr)):
+                    corr = 0
+                if corr > highest_corr:
+                    highest_corr = corr
+                    selected_feature = feat
+
+            if highest_corr == 0:
+                print('Selected feature: ', selected_feature, ' with correlation: ', highest_corr)
+           
+            return selected_feature
+        else:
+            print('Selected feature: ', group[0])
+            return group[0]

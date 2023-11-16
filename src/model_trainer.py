@@ -11,7 +11,6 @@ def evaluate(preds, y_test):
     preds_df = X_test.copy()
     preds_df['outage_count'] = test_preds
 
-
     grouped_preds = preds_df.groupby(['SimStartDate','event_type']).outage_count.sum().sort_index()
     print("Number of predictions: ", len(grouped_preds))
     display(grouped_preds)
