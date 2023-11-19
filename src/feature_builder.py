@@ -57,6 +57,15 @@ class FeatureBuilder:
 
         return X_train, X_test, y_train, y_test, selected_features, X_train_SimStartDate, X_test_SimStartDate
 
+    @staticmethod
+    def remove_one_value_features(df):
+        one_value_features_list = []
+        for column in df.columns:
+            if df[column].nunique() == 1:
+                one_value_features_list.append(column)
+
+        df.drop(one_value_features_list, axis=1, inplace=True)
+        return df
 
     """
     This function groups similar features together.

@@ -9,6 +9,9 @@ def main():
     # Load the data
     df = DataLoader.load_and_clean_data()
     
+    # remove features with only one value
+    df = FeatureBuilder.remove_one_value_features(df)
+
     # Generate features
     X_train_full, X_test, y_train_full, y_test, selected_feats, X_train_SimStartDate, X_test_SimStartDate = FeatureBuilder.filter_best_features(df)
 
