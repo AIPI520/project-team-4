@@ -13,9 +13,9 @@ def main():
     df = FeatureBuilder.remove_one_value_features(df)
 
     # Generate features
-    X_train_full, X_test, y_train_full, y_test, selected_feats = FeatureBuilder.filter_best_features(df)
+    X_train, X_test, y_train, y_test, selected_feats = FeatureBuilder.filter_best_features(df)
 
-    X_train_full.columns[0]
+    X_train.columns[0]
 
     print("Number of features: ", len(selected_feats))
     print("X_test sample: ", X_test.head())
@@ -23,17 +23,14 @@ def main():
     #model = ModelBuilder.build_lasso_model()
     #model = ModelBuilder.build_linear_model()
 
-    print("X_train_full shape: ", X_train_full.shape)
+    print("X_train shape: ", X_train.shape)
 
     # get only 30% of the data for training
-    X_train, _, y_train, _ = train_test_split(X_train_full, y_train_full, test_size=0.7, random_state=42)
+    #X_train, _, y_train, _ = train_test_split(X_train, y_train, test_size=0.7, random_state=42)
     
     model = ModelBuilder.build_decision_tree_model(X_train, y_train)
     model = train_model(X_train, y_train, model)
     test_preds = make_predictions(model, X_test)
-
-    #print("Non-zero coef features", [X_train_full.columns[i] for i in np.where(model.coef_ != 0)[0]])
-    #print("Zero coef features", [X_train_full.columns[i] for i in np.where(model.coef_ == 0)[0]])
 
     evaluate(test_preds, X_test, y_test)
 

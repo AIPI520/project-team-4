@@ -3,7 +3,7 @@ import os
 import pandas as pd
 
 from pathlib import Path
-from sklearn.preprocessing import OrdinalEncoder
+from sklearn.preprocessing import LabelEncoder
 
 import warnings
 warnings.filterwarnings('ignore')
@@ -39,11 +39,11 @@ class DataLoader:
         # Remove all rows with SimStartDate after 2019-01-01 and event_type == 'thunderstorm'
         df = df.loc[~((df['SimStartDate'] > '2019-01-01') & (df['event_type'] == 'thunderstorm'))]
 
-        # Apply ordinal encoding to 'poly_ewkt', 'point_ewkt', 'event_type' columns
+        # Apply label encoding to 'poly_ewkt', 'point_ewkt', 'event_type' columns
         non_numerical_columns = ['poly_ewkt', 'event_type']
-        enconder = OrdinalEncoder()
-        enconder.fit(df[non_numerical_columns])
-        df[non_numerical_columns] = enconder.transform(df[non_numerical_columns])
+        enconder = LabelEncoder()
+        for col in non_numerical_columns:
+            df[col] = enconder.fit_transform(df[col])
 
         # df = DataLoader._convert_date_columns(df)
 
