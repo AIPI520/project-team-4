@@ -12,8 +12,9 @@ This project involves data processing and model selection for a weather-related 
 ### Cleaning & Transformations
 
 1. **Initial Exploration**
-   - Used `.info()` to identify data types: 3 objects, 5 datetimes.
-   - Identified features with only one unique value and removed them.
+   - Used `.info()` to identify data types: 3 objects, 5 datetimes & rest float/int
+   - Observed there are no null values
+   - Identified features with only one unique value.
 
 2. **Data Type Conversion**
    - Converted object types to appropriate encodings.
