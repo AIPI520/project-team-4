@@ -24,11 +24,9 @@ class FeatureBuilder:
     """
     @staticmethod
     def filter_best_features(df):
+        # Use all data after Nov 1, 2018 (15 storms) as test set
         train_df_total = df.loc[df['SimStartDate'] < '2018-11-01']
         test_df_total = df.loc[df['SimStartDate'] >= '2018-11-01']
-
-        X_train_SimStartDate = train_df_total['SimStartDate']
-        X_test_SimStartDate = test_df_total['SimStartDate']
 
         train_df_total = FeatureBuilder._convert_date_columns(train_df_total)
         test_df_total = FeatureBuilder._convert_date_columns(test_df_total)
@@ -37,17 +35,14 @@ class FeatureBuilder:
         groups = FeatureBuilder._group_features(df.columns.unique().tolist())
         selected_features = [FeatureBuilder._get_best_feature_from_group(group, df) for group in groups]
 
+        #print("Correlations:", selected_features.sort(key=lambda x: x[1], reverse=True))
+
+        selected_features = [feat[0] for feat in selected_features if feat[1] >= 0.1]
+
+        #print("Selected features: ", selected_features)
+
         train_df = train_df_total[selected_features]
         test_df = test_df_total[selected_features]
-
-        # Use all data after Nov 1, 2018 (15 storms) as test set
-        # test_df = df[selected_features].loc[(df['SimStartDate_year'] > 2018) | 
-        #                                      ((df['SimStartDate_year'] == 2018) & (df['SimStartDate_month'] > 11)) |
-        #                                      ((df['SimStartDate_year'] == 2018) & (df['SimStartDate_month'] == 11) & (df['SimStartDate_day'] >= 1))]
-       
-        # train_df = df[selected_features].loc[(df['SimStartDate_year'] < 2018) | 
-        #                                       ((df['SimStartDate_year'] == 2018) & (df['SimStartDate_month'] < 11)) |
-        #                                       ((df['SimStartDate_year'] == 2018) & (df['SimStartDate_month'] == 11) & (df['SimStartDate_day'] < 1))]        
 
         X_train = train_df.drop(['outage_count'], axis=1)
         y_train = train_df['outage_count']
@@ -55,7 +50,7 @@ class FeatureBuilder:
         X_test = test_df.drop(['outage_count'], axis=1)
         y_test = test_df['outage_count']
 
-        return X_train, X_test, y_train, y_test, selected_features, X_train_SimStartDate, X_test_SimStartDate
+        return X_train, X_test, y_train, y_test, selected_features
 
     @staticmethod
     def remove_one_value_features(df):
@@ -113,13 +108,13 @@ class FeatureBuilder:
                     highest_corr = corr
                     selected_feature = feat
 
-            if highest_corr == 0:
-                print('Selected feature: ', selected_feature, ' with correlation: ', highest_corr)
+            #print('Selected feature: ', selected_feature, ' with correlation: ', highest_corr)
            
-            return selected_feature
+            return selected_feature, highest_corr
         else:
-            print('Selected feature: ', group[0])
-            return group[0]
+            corr = abs(df['outage_count'].corr(df[group[0]]))
+            #print('Selected feature: ', group[0], ' with correlation: ', corr)
+            return group[0], corr
         
     @staticmethod
     def _convert_date_columns(df):
