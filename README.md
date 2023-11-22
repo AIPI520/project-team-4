@@ -3,6 +3,9 @@
 
 # Project README: Data Processing & Model Selection
 
+## Presentation
+https://youtu.be/3CduCDKog5g
+
 ## Overview
 
 This project involves data processing and model selection for a weather-related dataset. The aim is to clean and transform the data, explore feature relevance, and ultimately select an appropriate model for prediction of number of outages caused by every storm in every location (grid cell).
