@@ -122,7 +122,16 @@ The `src` folder contains all the code that is used in the pipeline. The `data` 
 ### Experimentation findings
 Since we were not satisfyed with the MAPE values that the different models we tried were giving us, we thought that this could be due to unbalance between types of storms (since different features may be associated withteach type), so we analyzed the possibility of using different models for each type of storm, however we found out that on the test set we only have data for 1 type of storm.
 
-### Model choice: Random Forest
+#### Model Experimentation - Linear Regression
+Linear Regression is the easiest model to think of and serves as the baseline model. However, we think it is naive for thtat huge dataset and no help in feature selection/reduction. This model ends up with MAE: 0.58, MSE: 1.21, MAPE: 0.36.
 
-- We chose Random Forest Regressor as the modeling algorithm.
+#### Model Experimentation - Lasso Regression
+Then we think of Lasso which is good for providing automatic feature selection, but it is still naive for huge dataset. And the accuracy of using this model is not satisfactory. This model ends up with MAE: 0.60, MSE: 1.22, MAPE: 0.396.
+
+#### Model Experimentation - Bagging Regressor
+We think of Bagging because this model reduces the traninig time to some extent and small models are trained on different dataset so the final prediction's variance is reduced. However, this model ends up with MAE: 0.57, MSE: 1.18, MAPE: 0.354.
+
+### Final Model choice: Random Forest
+- We chose Random Forest Regressor as our final modeling algorithm.
 - Given the size of the dataset and the number of feature we were not able to run automatic hyperparameters fine-tuning (we tried GridSearchCV and RandomSearchCV).
+- This model ends up with choosing Random Forest as our final model with MAE: 0.54, MSE: 1.06, MAPE: 0.349.
