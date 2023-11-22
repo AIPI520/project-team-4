@@ -73,13 +73,12 @@ This project involves data processing and model selection for a weather-related 
 
 ## Project Structure
 ```bash
+.
 ├── Makefile
 ├── Notes
 ├── README.md
 ├── data
 │   └── outage_data.parquet
-├── features.csv
-├── features_sorted.csv
 ├── notebooks
 │   ├── 20_features.ipynb
 │   ├── EDA_starter.ipynb
@@ -94,7 +93,6 @@ This project involves data processing and model selection for a weather-related 
 │   │   ├── drop_list_group.pkl
 │   │   └── pearson_stat_drop_cols.pkl
 │   └── rf_analyser.ipynb
-├── outage_count.csv
 ├── project_requirements.md
 ├── requirements.txt
 ├── src

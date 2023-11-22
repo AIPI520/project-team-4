@@ -4,8 +4,6 @@
 ├── README.md
 ├── data
 │   └── outage_data.parquet
-├── features.csv
-├── features_sorted.csv
 ├── notebooks
 │   ├── 20_features.ipynb
 │   ├── EDA_starter.ipynb
@@ -20,7 +18,6 @@
 │   │   ├── drop_list_group.pkl
 │   │   └── pearson_stat_drop_cols.pkl
 │   └── rf_analyser.ipynb
-├── outage_count.csv
 ├── project_requirements.md
 ├── requirements.txt
 ├── src
@@ -36,4 +33,4 @@
 │   └── model_trainer.py
 └── tree.md
 
-5 directories, 31 files
+5 directories, 28 files
